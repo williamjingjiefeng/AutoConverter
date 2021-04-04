@@ -16,7 +16,7 @@ It features:
 
 	Once you call a def.Convert() on one CustomerResult object, we will return you an auto mapped Customer object. Entry point is Program.cs
 
-•	As you can see, all mappings are strongly typed with Lambda expression, elimination of \<object\> generic parameters have been endorsed.
+•	As you can see, all mappings are strongly typed with Lambda expression, elimination of \<object\> generic parameters has been endorsed.
 
 •	Compact "fluent" mapping behaviour.
 
@@ -44,7 +44,10 @@ Implentation details are explaied as follows:
 	As you can see, mapping needs to call To() method on the source field definition, note in this case, TSourceField will be the same as TTargetField. 
 	This could be either the case that TSourceField and TTargetField are of same type, or after Then() method is called on ISourceFieldDefinition. 
 	It is valid to have a common base interface to both ISourceFieldDefinition and ITransformedSourceFieldDefinition, which would contain their common .To() 
-	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid stringfy() combinations. Now some unexpected method chains are now impossible, e.g. .From().To().To(), or .From().Stringfy(). Ideally .To() would be available from ISourceFieldDefinintion and ITransformedSourceFieldDefinition but not from IFinalFieldDefinition, and Stringfy() should only be available from IFinalFieldDefinition but not the other two. 
+	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid stringfy() combinations. 
+	Now some unexpected method chains are impossible, e.g. .From().To().To(), or .From().Stringfy(). Ideally .To() would be available from 
+	ISourceFieldDefinintion and ITransformedSourceFieldDefinition but not from IFinalFieldDefinition, and Stringfy() should only be available from 
+	IFinalFieldDefinition but not the other two. 
 	
 2.	When Then() method is called, we create a new TransformedSourceFieldDefinition object, and add it into the hashset of IFieldMappingDefinition. As you can 
 	see, TransformedSourceFieldDefinition is defined as follows:
