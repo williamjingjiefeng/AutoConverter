@@ -1,5 +1,5 @@
 # AutoMappingConverter
-An automatic entity mapper and/or converter that supports mapping definition at each field level via Lambda expression expression
+An automatic entity mapper and/or converter that supports mapping definition at each field level via Lambda expression
 
 GitHub repository:
 <https://github.com/williamjingjiefeng/AutoConverter>
@@ -16,7 +16,7 @@ It features:
 
 	Once you call a def.Convert() on one CustomerResult object, we will return you an auto mapped Customer object. Entry point is Program.cs
 
-•	As you can see, all mappings are strongly typed with Lambda expression, elimination of <object> generic parameters have been endorsed.
+•	As you can see, all mappings are strongly typed with Lambda expression, elimination of \<object\> generic parameters have been endorsed.
 
 •	Compact "fluent" mapping behaviour.
 
