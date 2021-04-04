@@ -16,7 +16,7 @@ It features:
 
 	Once you call a def.Convert() on one CustomerResult object, we will return you an auto mapped Customer object. Entry point is Program.cs
 
-•	As you can see, all mappings are strongly typed with Lambda expression, elimination of \<object\> generic parameters have been endorsed.
+•	As you can see, all mappings are strongly typed with Lambda expression, elimination of \<object\> generic parameters has been endorsed.
 
 •	Compact "fluent" mapping behaviour.
 
