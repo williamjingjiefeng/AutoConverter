@@ -19,8 +19,8 @@ namespace AutoConverter
             // complex field mapping: intermediate transformation via Then(), in which transformation func GetLoyalty is called.
             def.From(z => z.YearsWithUs).Then(GetLoyalty).To(z => z.Loyalty);
 
-            // define string representation through predefined Stringfy() func. The end result will be a dictionary.
-            def.From(z => z.Account).To(z => z.Account).Stringfy(z =>
+            // define string representation through predefined Stringify() func. The end result will be a dictionary.
+            def.From(z => z.Account).To(z => z.Account).Stringify(z =>
                 $"AccountId:{z.AccountId}, AccountNumber:{z.AccountNumber}");
 
             var customerResult = new CustomerResult
@@ -38,7 +38,7 @@ namespace AutoConverter
 
             var result = def.Convert(customerResult);
 
-            var stringResult = def.Stringfy(customerResult);
+            var stringResult = def.Stringify(customerResult);
 
             Console.ReadLine();
         }

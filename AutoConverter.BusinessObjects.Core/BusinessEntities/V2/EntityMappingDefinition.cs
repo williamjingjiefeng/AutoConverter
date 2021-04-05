@@ -48,11 +48,11 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
             return _entityMappingPerformer.Convert(sourceEntity);
         }
 
-        public Dictionary<string, string> Stringfy(TSourceEntity sourceEntity)
+        public Dictionary<string, string> Stringify(TSourceEntity sourceEntity)
         {
             _entityMappingPerformer = Compile();
 
-            return _entityMappingPerformer.Stringfy(sourceEntity);
+            return _entityMappingPerformer.Stringify(sourceEntity);
         }
 
         private EntityMappingPerformer Compile()
@@ -84,7 +84,7 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
     public interface IEntityConverter<in TSourceEntity, out TTargetEntity>
     {
         TTargetEntity Convert(TSourceEntity sourceEntity);
-        Dictionary<string, string> Stringfy(TSourceEntity sourceEntity);
+        Dictionary<string, string> Stringify(TSourceEntity sourceEntity);
     }
 
     /// <summary>
@@ -114,6 +114,6 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
 
     public interface IFinalFieldDefinition<out TTargetField>
     {
-        void Stringfy(Func<TTargetField, string> final);
+        void Stringify(Func<TTargetField, string> final);
     }
 }

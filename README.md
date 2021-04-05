@@ -44,9 +44,9 @@ Implentation details are explaied as follows:
 	As you can see, mapping needs to call To() method on the source field definition, note in this case, TSourceField will be the same as TTargetField. 
 	This could be either the case that TSourceField and TTargetField are of same type, or after Then() method is called on ISourceFieldDefinition. 
 	It is valid to have a common base interface to both ISourceFieldDefinition and ITransformedSourceFieldDefinition, which would contain their common .To() 
-	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid stringfy() combinations. 
-	Now some unexpected method chains are impossible, e.g. .From().To().To(), or .From().Stringfy(). Ideally .To() would be available from 
-	ISourceFieldDefinintion and ITransformedSourceFieldDefinition but not from IFinalFieldDefinition, and Stringfy() should only be available from 
+	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid stringify() combinations. 
+	Now some unexpected method chains are impossible, e.g. .From().To().To(), or .From().Stringify(). Ideally .To() would be available from 
+	ISourceFieldDefinintion and ITransformedSourceFieldDefinition but not from IFinalFieldDefinition, and Stringify() should only be available from 
 	IFinalFieldDefinition but not the other two. 
 	
 2.	When Then() method is called, we create a new TransformedSourceFieldDefinition object, and add it into the hashset of IFieldMappingDefinition. As you can 
@@ -93,7 +93,7 @@ Implentation details are explaied as follows:
 	To()   	   ==> 	defined in ITargetFieldDefinition<TTargetEntity, TTargetField> as IFinalFieldDefinition<TTargetField> 
 					To(Expression<Func<TTargetEntity, TTargetField>> targetField);
 	
-	Stringfy() ==>	defined in IFinalFieldDefinition<out TTargetField> as void Stringfy(Func<TTargetField, string> final);
+	Stringify() ==>	defined in IFinalFieldDefinition<out TTargetField> as void Stringify(Func<TTargetField, string> final);
 	
 	Why we have to return ISourceFieldDefinition<TTargetEntity, TSourceField> from "From()" is because type parameter TTargetEntity is needed in To() method.
 	
@@ -106,7 +106,7 @@ Implentation details are explaied as follows:
         {
             readonly Func<TSourceEntity, TTargetField> sourceFieldGetter;
             readonly Expression<Func<TTargetEntity, TTargetField>> targetField;
-            Func<TTargetField, string> stringfy;
+            Func<TTargetField, string> stringify;
 
             public CompleteFieldMapping(Func<TSourceEntity, TTargetField> sourceFieldGetter, Expression<Func<TTargetEntity, TTargetField>> targetField)
             {
@@ -191,7 +191,7 @@ Implentation details are explaied as follows:
 		var sourceValue = sourceFieldGetter(source);
 		targetFieldSetter(target, sourceValue);
 		
-7.	Stringfy() is supported in IFinalFieldDefinition, which will be passed to FieldMappingPerformer from EntityMappingPerformer during the course of compiling 
+7.	Stringify() is supported in IFinalFieldDefinition, which will be passed to FieldMappingPerformer from EntityMappingPerformer during the course of compiling 
 	CompleteFieldMapping as follows:
 
 	7.1 EntityMappingDefinition --> Convert()
@@ -201,6 +201,6 @@ Implentation details are explaied as follows:
 	7.5 Loop through its FieldMappingPerformers and perform Apply() on each of them
 	
 	Note we can't compile a field when only From() and Then() have been defined. We have to chain a call to To() after defining this field. Only 
-	SourceFieldDefinition and TransformedSourceFieldDefinition have implemented IFinalFieldDefinition, which will call final.SetupStringfyFunc(stringfy). 
+	SourceFieldDefinition and TransformedSourceFieldDefinition have implemented IFinalFieldDefinition, which will call final.SetupStringifyFunc(stringify). 
 	Final is of type CompleteFieldMapping.
 	

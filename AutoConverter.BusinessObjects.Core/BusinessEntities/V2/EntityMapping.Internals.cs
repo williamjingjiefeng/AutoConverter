@@ -41,7 +41,7 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
 
         interface IFinalFieldMapping<out TTargetField>
         {
-            void SetupStringfyFunc(Func<TTargetField, string> stringfy);
+            void SetupStringifyFunc(Func<TTargetField, string> stringify);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
         interface IFieldMappingPerformer
         {
             void Apply(TSourceEntity source, TTargetEntity target);
-            KeyValuePair<string, string> Stringfy(TSourceEntity source, TTargetEntity target);
+            KeyValuePair<string, string> Stringify(TSourceEntity source, TTargetEntity target);
         }
 
         #endregion
@@ -85,13 +85,13 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                 return targetEntity;
             }
 
-            public Dictionary<string, string> Stringfy(TSourceEntity sourceEntity)
+            public Dictionary<string, string> Stringify(TSourceEntity sourceEntity)
             {
                 var targetEntity = new TTargetEntity();
                 var result = new Dictionary<string, string>();
                 foreach (var fieldMapper in fieldMappers)
                 {
-                    var pair = fieldMapper.Stringfy(sourceEntity, targetEntity);
+                    var pair = fieldMapper.Stringify(sourceEntity, targetEntity);
                     result.Add(pair.Key, pair.Value);
                 }
 
@@ -133,15 +133,15 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                 return this;
             }
 
-            void IFinalFieldDefinition<TSourceField>.Stringfy(Func<TSourceField, string> stringfy)
+            void IFinalFieldDefinition<TSourceField>.Stringify(Func<TSourceField, string> stringify)
             {
                 if (final == null)
                 {
-                    var error = string.Format("Can't stringfy a field where only From() has been defined. Chain a call to Then() or To() after stringfying this field.");
+                    var error = string.Format("Can't stringify a field where only From() has been defined. Chain a call to Then() or To() after stringifying this field.");
                     throw new Exception(error);
                 }
 
-                final.SetupStringfyFunc(stringfy);
+                final.SetupStringifyFunc(stringify);
             }
 
             /// <summary>
@@ -202,15 +202,15 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                 return this;
             }
 
-            void IFinalFieldDefinition<TTargetField>.Stringfy(Func<TTargetField, string> stringfy)
+            void IFinalFieldDefinition<TTargetField>.Stringify(Func<TTargetField, string> stringify)
             {
                 if (final == null)
                 {
-                    var error = string.Format("Can't stringfy a field where only From() has been defined. Chain a call to Then() or To() after stringfying this field.");
+                    var error = string.Format("Can't stringify a field where only From() has been defined. Chain a call to Then() or To() after stringifying this field.");
                     throw new Exception(error);
                 }
 
-                final.SetupStringfyFunc(stringfy);
+                final.SetupStringifyFunc(stringify);
             }
 
             /// <summary>
@@ -232,7 +232,7 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
         {
             readonly Func<TSourceEntity, TTargetField> sourceFieldGetter;
             readonly Expression<Func<TTargetEntity, TTargetField>> targetField;
-            Func<TTargetField, string> stringfy;
+            Func<TTargetField, string> stringify;
 
             public CompleteFieldMapping(Func<TSourceEntity, TTargetField> sourceFieldGetter, Expression<Func<TTargetEntity, TTargetField>> targetField)
             {
@@ -253,12 +253,12 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
             /// </summary>
             public IFieldMappingPerformer Compile(string tagValue)
             {
-                return new FieldMappingPerformer<TTargetField>(sourceFieldGetter, targetField, stringfy, tagValue);
+                return new FieldMappingPerformer<TTargetField>(sourceFieldGetter, targetField, stringify, tagValue);
             }
 
-            public void SetupStringfyFunc(Func<TTargetField, string> stringfyFunc)
+            public void SetupStringifyFunc(Func<TTargetField, string> stringify)
             {
-                stringfy = stringfyFunc;
+                this.stringify = stringify;
             }
         }
 
@@ -271,13 +271,13 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
             readonly Action<TTargetEntity, TTargetField> targetFieldSetter;
             readonly Expression<Func<TTargetEntity, TTargetField>> targetField;
             readonly Func<TTargetEntity, TTargetField> targetFieldFunc;
-            readonly Func<TTargetField, string> stringfy;
+            readonly Func<TTargetField, string> stringify;
             private string tagVlaue;
             private readonly bool isValueTpe;
 
             public FieldMappingPerformer(Func<TSourceEntity, TTargetField> sourceFieldGetter,
                 Expression<Func<TTargetEntity, TTargetField>> targetField,
-                Func<TTargetField, string> stringfy,
+                Func<TTargetField, string> stringify,
                 string tagVlaue)
             {
                 this.sourceFieldGetter = sourceFieldGetter;
@@ -286,9 +286,9 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                 targetFieldSetter = ExpressionHelper.CreateFieldSetter(targetField);
                 isValueTpe = typeof(TTargetField).IsValueType;
 
-                if (stringfy == null)
+                if (stringify == null)
                 {
-                    stringfy = z =>
+                    stringify = z =>
                         {
                             if (isValueTpe)
                             {
@@ -306,7 +306,7 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                         };
                 }
 
-                this.stringfy = stringfy;
+                this.stringify = stringify;
                 this.tagVlaue = tagVlaue;
             }
 
@@ -316,18 +316,18 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                 targetFieldSetter(target, sourceValue);
             }
 
-            public KeyValuePair<string, string> Stringfy(TSourceEntity source, TTargetEntity target)
+            public KeyValuePair<string, string> Stringify(TSourceEntity source, TTargetEntity target)
             {
                 Apply(source, target);
 
-                var targetFieldString = stringfy(targetFieldFunc(target));
+                var targetFieldString = stringify(targetFieldFunc(target));
                 var simplePropertyNameAggregator = new SimplePropertyNameAggregator();
                 simplePropertyNameAggregator.Visit(targetField.Body, false);
 
                 if (string.IsNullOrEmpty(tagVlaue))
                 {
                     var error =
-                        $"Can't stringfy a field where tag value is not defined for source entity: {typeof(TSourceEntity).Name}, " +
+                        $"Can't stringify a field where tag value is not defined for source entity: {typeof(TSourceEntity).Name}, " +
                         $"target entity: {typeof(TTargetEntity).Name}";
 
                     throw new Exception(error);
