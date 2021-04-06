@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AutoConverter</RootNamespace>
     <AssemblyName>AutoConverter</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -51,7 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Customer.cs" />
+    <Compile Include="Demo1.cs" />
+    <Compile Include="Demo2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -62,6 +63,10 @@
     <ProjectReference Include="..\AutoConverter.BusinessObjects.Core\AutoConverter.BusinessObjects.Core.csproj">
       <Project>{b917b3d4-7020-41f3-bf9b-23746126eaab}</Project>
       <Name>AutoConverter.BusinessObjects.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoConverter.Model\AutoConverter.Model.csproj">
+      <Project>{c950b0bf-a175-4948-b41e-a3383f571e7e}</Project>
+      <Name>AutoConverter.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
