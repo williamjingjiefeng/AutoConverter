@@ -30,6 +30,7 @@ It features:
 Use Cases:
 
 •	Maintain and enforce application level consistent object mapping.
+
 •	Emphasize the immutability of some mission critical application constructs for the performance gain
 
 Implementation details are explained as follows:
