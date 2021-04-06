@@ -48,6 +48,13 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
             return _entityMappingPerformer.Convert(sourceEntity);
         }
 
+        public void Copy(TSourceEntity sourceEntity, TTargetEntity targetEntity)
+        {
+            _entityMappingPerformer = Compile();
+
+            _entityMappingPerformer.Copy(sourceEntity, targetEntity);
+        }
+
         public Dictionary<string, string> Stringify(TSourceEntity sourceEntity)
         {
             _entityMappingPerformer = Compile();
@@ -81,10 +88,11 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
     /// <summary>
     /// An object which converts entities from {TSourceEntity} to {TTargetEntity}. You build one of these using EntityMappingDefinition.
     /// </summary>
-    public interface IEntityConverter<in TSourceEntity, out TTargetEntity>
+    public interface IEntityConverter<in TSourceEntity, TTargetEntity>
     {
         TTargetEntity Convert(TSourceEntity sourceEntity);
         Dictionary<string, string> Stringify(TSourceEntity sourceEntity);
+        void Copy(TSourceEntity sourceEntity, TTargetEntity targetEntity);
     }
 
     /// <summary>

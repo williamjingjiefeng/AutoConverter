@@ -36,9 +36,28 @@ namespace AutoConverter
                 },
             };
 
-            var result = def.Convert(customerResult);
+            // covert from customerResult to customer
+            var customer = def.Convert(customerResult);
 
             var stringResult = def.Stringify(customerResult);
+
+            // show how we copy the same type of object
+            var copyDefinition = new EntityMappingDefinition<Customer, Customer>("customer");
+            copyDefinition.From(z => z.Name).To(z => z.Name);
+            copyDefinition.From(z => z.Age).To(z => z.Age);
+
+            var newCustomer = new Customer
+            {
+                Loyalty = Loyalty.Level1,
+                Account = new Account
+                {
+                    AccountId = 125,
+                    AccountNumber = "123456789"
+                }
+            };
+
+            // copy from converted customer to a new customer object we just initialized and see how properties are merged
+            copyDefinition.Copy(customer, newCustomer);
 
             Console.ReadLine();
         }

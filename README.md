@@ -25,7 +25,14 @@ It features:
 
 •	Maintain difficulty level of the code – there are still tons of generic type parameters happening.
 
-Implentation details are explaied as follows:
+•	You can use this library for copying as well if you make From type as To type
+
+Use Cases:
+
+•	Maintain and enforce application level consistent object mapping.
+•	Emphasize the immutability of some mission critical application constructs for the performance gain
+
+Implementation details are explained as follows:
 
 1. 	ISourceFieldDefinition is of ITargetFieldDefinition as well because:
 
@@ -44,8 +51,8 @@ Implentation details are explaied as follows:
 	As you can see, mapping needs to call To() method on the source field definition, note in this case, TSourceField will be the same as TTargetField. 
 	This could be either the case that TSourceField and TTargetField are of same type, or after Then() method is called on ISourceFieldDefinition. 
 	It is valid to have a common base interface to both ISourceFieldDefinition and ITransformedSourceFieldDefinition, which would contain their common .To() 
-	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid stringify() combinations. 
-	Now some unexpected method chains are impossible, e.g. .From().To().To(), or .From().Stringify(). Ideally .To() would be available from 
+	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid Stringify() combinations. 
+	With this arrangement, some unexpected method chains are impossible, e.g. .From().To().To(), or .From().Stringify(). Ideally .To() would be available from 
 	ISourceFieldDefinintion and ITransformedSourceFieldDefinition but not from IFinalFieldDefinition, and Stringify() should only be available from 
 	IFinalFieldDefinition but not the other two. 
 	

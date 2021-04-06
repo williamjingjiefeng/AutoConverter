@@ -85,6 +85,14 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                 return targetEntity;
             }
 
+            public void Copy(TSourceEntity sourceEntity, TTargetEntity targetEntity)
+            {
+                foreach (var fieldMapper in fieldMappers)
+                {
+                    fieldMapper.Apply(sourceEntity, targetEntity);
+                }
+            }
+
             public Dictionary<string, string> Stringify(TSourceEntity sourceEntity)
             {
                 var targetEntity = new TTargetEntity();

@@ -3,8 +3,8 @@ namespace AutoConverter
 {
     public class Customer
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
+        public string Name { get; private set; }
+        public int Age { get; private set; }
         public Preference Preference { get; set; }
 
         public Account Account { get; set; }
@@ -15,7 +15,7 @@ namespace AutoConverter
             Account = new Account();
         }
 
-        public  Loyalty Loyalty  { get; set;}
+        public Loyalty Loyalty { get; set; }
     }
 
     public enum Loyalty
