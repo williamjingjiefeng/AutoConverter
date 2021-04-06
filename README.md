@@ -1,5 +1,5 @@
 # AutoMappingConverter
-An automatic entity mapper and/or converter that supports mapping definition at each field level via Lambda expression
+An automatic object mapping library that supports mapping definition at each property level via Lambda expression
 
 GitHub repository:
 <https://github.com/williamjingjiefeng/AutoConverter>
