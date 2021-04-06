@@ -25,7 +25,7 @@ It features:
 
 •	Maintain difficulty level of the code – there are still tons of generic type parameters happening.
 
-•	You can use this library for copying as well if you make From type as To type
+•	You can use this library for copying as well if you make From type same as To type when defining EntityMappingDefinition.
 
 Use Cases:
 
