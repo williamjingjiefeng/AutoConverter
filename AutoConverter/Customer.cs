@@ -16,6 +16,8 @@ namespace AutoConverter
         }
 
         public Loyalty Loyalty { get; set; }
+
+        public string Mobile { get; set; }
     }
 
     public enum Loyalty

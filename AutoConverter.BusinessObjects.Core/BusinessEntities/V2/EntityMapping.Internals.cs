@@ -50,6 +50,7 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
         interface IFieldMappingPerformer
         {
             void Apply(TSourceEntity source, TTargetEntity target);
+            void Apply(TTargetEntity fromEntity, TTargetEntity toEntity);
             KeyValuePair<string, string> Stringify(TSourceEntity source, TTargetEntity target);
         }
 
@@ -85,11 +86,11 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
                 return targetEntity;
             }
 
-            public void Copy(TSourceEntity sourceEntity, TTargetEntity targetEntity)
+            public void Copy(TTargetEntity fromEntity, TTargetEntity toEntity)
             {
                 foreach (var fieldMapper in fieldMappers)
                 {
-                    fieldMapper.Apply(sourceEntity, targetEntity);
+                    fieldMapper.Apply(fromEntity, toEntity);
                 }
             }
 
@@ -322,6 +323,12 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
             {
                 var sourceValue = sourceFieldGetter(source);
                 targetFieldSetter(target, sourceValue);
+            }
+
+            public void Apply(TTargetEntity fromEntity, TTargetEntity toEntity)
+            {
+                var sourceValue = targetFieldFunc(fromEntity);
+                targetFieldSetter(toEntity, sourceValue);
             }
 
             public KeyValuePair<string, string> Stringify(TSourceEntity source, TTargetEntity target)

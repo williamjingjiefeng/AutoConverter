@@ -42,10 +42,6 @@ namespace AutoConverter
             var stringResult = def.Stringify(customerResult);
 
             // show how we copy the same type of object
-            var copyDefinition = new EntityMappingDefinition<Customer, Customer>("customer");
-            copyDefinition.From(z => z.Name).To(z => z.Name);
-            copyDefinition.From(z => z.Age).To(z => z.Age);
-
             var newCustomer = new Customer
             {
                 Loyalty = Loyalty.Level1,
@@ -53,11 +49,13 @@ namespace AutoConverter
                 {
                     AccountId = 125,
                     AccountNumber = "123456789"
-                }
+                },
+                Mobile = "0455467568"
             };
 
-            // copy from converted customer to a new customer object we just initialized and see how properties are merged
-            copyDefinition.Copy(customer, newCustomer);
+            // only copy defined properties of EntityMappingDefinition from converted customer to new customer object,
+            // other properties in existing object will be kept.
+            def.Copy(customer, newCustomer);
 
             Console.ReadLine();
         }

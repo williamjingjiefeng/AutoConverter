@@ -48,11 +48,11 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
             return _entityMappingPerformer.Convert(sourceEntity);
         }
 
-        public void Copy(TSourceEntity sourceEntity, TTargetEntity targetEntity)
+        public void Copy(TTargetEntity fromEntity, TTargetEntity toEntity)
         {
             _entityMappingPerformer = Compile();
 
-            _entityMappingPerformer.Copy(sourceEntity, targetEntity);
+            _entityMappingPerformer.Copy(fromEntity, toEntity);
         }
 
         public Dictionary<string, string> Stringify(TSourceEntity sourceEntity)
@@ -92,7 +92,7 @@ namespace AutoConverter.BusinessObjects.Core.BusinessEntities.V2
     {
         TTargetEntity Convert(TSourceEntity sourceEntity);
         Dictionary<string, string> Stringify(TSourceEntity sourceEntity);
-        void Copy(TSourceEntity sourceEntity, TTargetEntity targetEntity);
+        void Copy(TTargetEntity fromEntity, TTargetEntity toEntity);
     }
 
     /// <summary>

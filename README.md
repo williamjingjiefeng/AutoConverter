@@ -25,13 +25,15 @@ It features:
 
 •	Maintain difficulty level of the code – there are still tons of generic type parameters happening.
 
-•	You can use this library for copying as well if you make From type same as To type when defining EntityMappingDefinition.
+•	You can use this library for copying the same type of object if you only want to merge To() properties defined in EntityMappingDefinition.
 
 Use Cases:
 
 •	Maintain and enforce application level consistent object mapping.
 
 •	Emphasize the immutability of some mission critical application constructs for the performance gain.
+
+•	A consistent and normalised string representation of the converted object is required across the board.
 
 Implementation details are explained as follows:
 
