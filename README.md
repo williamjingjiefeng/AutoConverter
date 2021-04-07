@@ -105,7 +105,16 @@ Implementation details are explained as follows:
 	
 	Stringify() ==>	defined in IFinalFieldDefinition<out TTargetField> as void Stringify(Func<TTargetField, string> final);
 	
-	Why we have to return ISourceFieldDefinition<TTargetEntity, TSourceField> from "From()" is because type parameter TTargetEntity is needed in To() method.
+	Why we have to return ISourceFieldDefinition<TTargetEntity, TSourceField> instead of ISourceFieldDefinition<TSourceField> from "From()" is because type parameter 	         TTargetEntity is needed in To() method as follows (Note TTargetEntity is from EntityMappingDefinition's type argument):
+
+        public interface ITargetFieldDefinition<TTargetEntity, TTargetField>
+        {
+        	/// <summary>
+        	/// Map to the target field. Note: implicit conversions in [targetField] to {TTargetField} are not allowed and will throw errors at runtime. You should add 
+		/// explicit casts if need be.
+        	/// </summary>
+        	IFinalFieldDefinition<TTargetField> To(Expression<Func<TTargetEntity, TTargetField>> targetField);
+    	}
 	
 3.	SourceFieldDefinition vs TransformedSourceFieldDefinition
 
@@ -124,7 +133,7 @@ Implementation details are explained as follows:
 		}
 		
 	You can see:
-		for SourceFieldDefinition: 				TSourceField is the same as TTargetField, sourceFieldGetter is of type Func<TSourceEntity, TSourceField>,
+		for SourceFieldDefinition: 		TSourceField is the same as TTargetField, sourceFieldGetter is of type Func<TSourceEntity, TSourceField>,
 												targetField is of Expression<Func<TTargetEntity, TSourceField>>
 		for TransformedSourceFieldDefinition: 	TTargetField is the same as TTargetField, combinedGetter is of type Func<TSourceEntity, TTargetField>, 
 												targetField is of Expression<Func<TTargetEntity, TTargetField>>
