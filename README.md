@@ -112,7 +112,7 @@ Implementation details are explained as follows:
 	Stringify() ==>	defined in IFinalFieldDefinition<out TTargetField> as void Stringify(Func<TTargetField, string> final);
 	
 	Why we have to return ISourceFieldDefinition<TTargetEntity, TSourceField> instead of ISourceFieldDefinition<TSourceField> from "From()" is because 
-	type parameter TTargetEntity is needed in To() method as above (Note TTargetEntity is one of EntityMappingDefinition's generic type argument).
+	type parameter TTargetEntity is needed in To() method as above (Note TTargetEntity is one of EntityMappingDefinition's generic type arguments).
 	
 3.	SourceFieldDefinition vs TransformedSourceFieldDefinition
 
@@ -131,16 +131,19 @@ Implementation details are explained as follows:
 		}
 		
 	You can see:
-		for SourceFieldDefinition: 				TSourceField is the same as TTargetField, sourceFieldGetter is of type Func<TSourceEntity, TSourceField>,
-												targetField is of Expression<Func<TTargetEntity, TSourceField>>
-		for TransformedSourceFieldDefinition: 	TTargetField is the same as TTargetField, combinedGetter is of type Func<TSourceEntity, TTargetField>, 
-												targetField is of Expression<Func<TTargetEntity, TTargetField>>
+
+	for SourceFieldDefinition: 				TSourceField is the same as TTargetField, sourceFieldGetter is of type Func<TSourceEntity, TSourceField>,
+											targetField is of Expression<Func<TTargetEntity, TSourceField>>
+
+	for TransformedSourceFieldDefinition: 	TTargetField is the same as TTargetField, combinedGetter is of type Func<TSourceEntity, TTargetField>, 
+											targetField is of Expression<Func<TTargetEntity, TTargetField>>
 
 4. 	When Convert() is called on EntityMappingDefinition, we will do the following two things:
 
 	4.1	Firstly we call Compile() to create an EntityMappingPerformer class object, which will host all field mappings, and create a list of 
 		field mapping performers for each field mapping in the hash set via compiling. Inside FieldMappingPerformer, the most important thing is creating 
 		targetFieldSetter.
+
 	4.2	Then we will call Convert() on the newly created EntityMappingPerformer object
 	
 5.	What this targetFieldSetter(target, sourceValue) in the method Apply(TSourceEntity source, TTargetEntity target) does is assigning source field's value 
@@ -198,9 +201,6 @@ Implementation details are explained as follows:
 			Member: {System.String Hobby}
 			NodeType: MemberAccess
 			Type: {Name = "String" FullName = "System.String"}
-			
-	public static TAccumulate Aggregate<TSource, TAccumulate>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func);
-	public static MemberExpression PropertyOrField(Expression expression, string propertyOrFieldName);
 	  
 6.	Now we are hosting this sourceFieldGetter and targetFieldSetter in FieldMappingPerformer, when Convert() is called on EntityMappingPerformer, each 
 	FieldMappingPerformer is looped and Apply() method is called, during which we do the following things to complete the conversion:
@@ -212,9 +212,13 @@ Implementation details are explained as follows:
 	CompleteFieldMapping as follows:
 
 	7.1 EntityMappingDefinition --> Convert()
+
 	7.2	Inside Convert(), EntityMappingDefinition --> Compile() --> Generate EntityMappingPerformer class with fieldMappings
+	
 	7.3	EntityMappingPerformer --> generate a list of FieldMappingPerformer
+	
 	7.4	EntityMappingPerformer --> Convert()
+	
 	7.5 Loop through its FieldMappingPerformers and perform Apply() on each of them
 	
 	Note we can't compile a field when only From() and Then() have been defined. We have to chain a call to To() after defining this field. Only 
