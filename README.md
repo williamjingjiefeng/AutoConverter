@@ -10,11 +10,11 @@ It features:
 	
 	var def = EntityMappingDefinition<CustomerResult, Customer>("Customer");
 	
-	with the mapping at the field level chained up together as follows:
+	with the mapping at property level chained up together as follows:
 
 	def.From(z => z.YearsWithUs).Then(GetLoyalty).To(z => z.Loyalty);
 
-	Once you call a def.Convert() on one CustomerResult object, we will return you an auto mapped Customer object. Entry point is Program.cs
+	Once you call a def.Convert() on one CustomerResult object, we will return you an auto mapped Customer object. Entry point is Program.cs.
 
 •	As you can see, all mappings are strongly typed with Lambda expression, elimination of \<object\> generic parameters has been endorsed.
 
@@ -52,12 +52,18 @@ Implementation details are explained as follows:
 		}
 		
 	As you can see, mapping needs to call To() method on the source field definition, note in this case, TSourceField will be the same as TTargetField. 
+	It is not hard to identify this as To() method in the interface is defined as follows:
+
+	IFinalFieldDefinition<TTargetField> To(Expression<Func<TTargetEntity, TTargetField>> targetField);
+	
+	Although this is an explicit interface implementation, you will conclude this when you compare the type argument.
+
 	This could be either the case that TSourceField and TTargetField are of same type, or after Then() method is called on ISourceFieldDefinition. 
 	It is valid to have a common base interface to both ISourceFieldDefinition and ITransformedSourceFieldDefinition, which would contain their common .To() 
-	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid Stringify() combinations. 
-	With this arrangement, some unexpected method chains are impossible, e.g. .From().To().To(), or .From().Stringify(). Ideally .To() would be available from 
-	ISourceFieldDefinintion and ITransformedSourceFieldDefinition but not from IFinalFieldDefinition, and Stringify() should only be available from 
-	IFinalFieldDefinition but not the other two. 
+	method, but it should be separate from IFinalFieldDefinition. This would reduce the need to check and throw exceptions for invalid Stringify() 
+	combinations. With this arrangement, some unexpected method chains are impossible, e.g. .From().To().To(), or .From().Stringify(). Ideally .To() would be 
+	available from ISourceFieldDefinintion and ITransformedSourceFieldDefinition but not from IFinalFieldDefinition, and Stringify() should only be available 
+	from IFinalFieldDefinition but not the other two. 
 	
 2.	When Then() method is called, we create a new TransformedSourceFieldDefinition object, and add it into the hashset of IFieldMappingDefinition. As you can 
 	see, TransformedSourceFieldDefinition is defined as follows:
@@ -105,16 +111,8 @@ Implementation details are explained as follows:
 	
 	Stringify() ==>	defined in IFinalFieldDefinition<out TTargetField> as void Stringify(Func<TTargetField, string> final);
 	
-	Why we have to return ISourceFieldDefinition<TTargetEntity, TSourceField> instead of ISourceFieldDefinition<TSourceField> from "From()" is because type parameter 	         TTargetEntity is needed in To() method as follows (Note TTargetEntity is from EntityMappingDefinition's type argument):
-
-        public interface ITargetFieldDefinition<TTargetEntity, TTargetField>
-        {
-        	/// <summary>
-        	/// Map to the target field. Note: implicit conversions in [targetField] to {TTargetField} are not allowed and will throw errors at runtime. You should add 
-		/// explicit casts if need be.
-        	/// </summary>
-        	IFinalFieldDefinition<TTargetField> To(Expression<Func<TTargetEntity, TTargetField>> targetField);
-    	}
+	Why we have to return ISourceFieldDefinition<TTargetEntity, TSourceField> instead of ISourceFieldDefinition<TSourceField> from "From()" is because 
+	type parameter TTargetEntity is needed in To() method as above (Note TTargetEntity is one of EntityMappingDefinition's generic type argument).
 	
 3.	SourceFieldDefinition vs TransformedSourceFieldDefinition
 
@@ -133,7 +131,7 @@ Implementation details are explained as follows:
 		}
 		
 	You can see:
-		for SourceFieldDefinition: 		TSourceField is the same as TTargetField, sourceFieldGetter is of type Func<TSourceEntity, TSourceField>,
+		for SourceFieldDefinition: 				TSourceField is the same as TTargetField, sourceFieldGetter is of type Func<TSourceEntity, TSourceField>,
 												targetField is of Expression<Func<TTargetEntity, TSourceField>>
 		for TransformedSourceFieldDefinition: 	TTargetField is the same as TTargetField, combinedGetter is of type Func<TSourceEntity, TTargetField>, 
 												targetField is of Expression<Func<TTargetEntity, TTargetField>>
