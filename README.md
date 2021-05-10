@@ -1,6 +1,9 @@
 # AutoMappingConverter
 An automatic object mapping library that supports mapping definition at each property level via Lambda expression
 
+Author:	William Jingjie Feng:	william.feng@vcstechnology.com
+		Ken Hornibrook:			kenhornibrook@gmail.com
+
 GitHub repository:
 <https://github.com/williamjingjiefeng/AutoConverter>
 
@@ -34,6 +37,11 @@ Use Cases:
 •	Emphasize the immutability of some mission critical application constructs for the performance gain.
 
 •	A consistent and normalised string representation of the converted object is required across the board.
+
+•	This tech would have the most benefit for projects where you have complex transformations of deeply structured entities 
+	that originated from XML documents. The key value proposition is being able to create complex transformations that are 
+	still completely type safe, while also being simple to define using the fluent API. But it will also bring a lot of benefit 
+	with the common data sync pattern, which is mostly "1 table / entity at a time, but also FK mapping, and some minor transformations". 
 
 Implementation details are explained as follows:
 
