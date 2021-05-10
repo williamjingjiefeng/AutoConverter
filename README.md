@@ -1,8 +1,11 @@
 # AutoMappingConverter
 An automatic object mapping library that supports mapping definition at each property level via Lambda expression
 
-Author:	William Jingjie Feng:	william.feng@vcstechnology.com
-		Ken Hornibrook:			kenhornibrook@gmail.com
+Authors:	
+
+William Jingjie Feng:	william.feng@vcstechnology.com
+
+Ken Hornibrook:			kenhornibrook@gmail.com
 
 GitHub repository:
 <https://github.com/williamjingjiefeng/AutoConverter>
